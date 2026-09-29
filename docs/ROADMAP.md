@@ -8,19 +8,19 @@
 
 ## Phase 1 — Laravel Foundation
 **Objectives:** Stand up the base application.
-**Tasks:** Install Laravel; configure environment (.env, DB connection); install Filament; set up base auth (owner account); configure storage disks for media.
+**Tasks:** Install Laravel; configure environment (.env, DB connection); build the custom admin shell (routes, layout, sidebar, dashboard stub, passcode sign-in, `EnsureUserHasRole`); create the owner account and the passcode-rotation command; configure storage disks for media. No admin framework package is installed — see `ADMIN_PANEL.md` §1.
 **Dependencies:** Phase 0 sign-off.
-**Completion criteria:** Fresh Laravel app boots locally, admin login works, empty Filament panel accessible.
+**Completion criteria:** Fresh Laravel app boots locally, admin sign-in works, the custom panel's empty dashboard is reachable behind auth.
 
 ## Phase 2 — Database & CMS Core
 **Objectives:** Implement the data layer per `DATABASE.md`.
-**Tasks:** Migrations for all approved tables; Eloquent models + relationships; base Filament resources for `content_items`, `categories`, `tags`, `topics`, `publications`, `media`.
+**Tasks:** Migrations for all approved tables; Eloquent models + relationships; custom admin CRUD screens (controller + form request + Blade index/form) for `content_items`, `categories`, `tags`, `topics`, `publications`, `media` — one content screen scoped by `content_type` and `source_type`, per `ADMIN_PANEL.md` §5.
 **Dependencies:** Phase 1.
 **Completion criteria:** All tables migrated; admin CRUD works for content items (internal + external) and taxonomies.
 
 ## Phase 3 — Journalist Profile
 **Objectives:** Implement profile-related data and admin screens.
-**Tasks:** `journalist_profiles`, `career_history`, `education`, `awards` migrations/models; Filament profile edit screen + repeatable sub-resources.
+**Tasks:** `journalist_profiles`, `career_history`, `education`, `awards` migrations/models; the singleton profile edit screen (edit-only route — no index, no create) plus the three repeatable sub-resource screens with drag-to-reorder.
 **Dependencies:** Phase 2.
 **Completion criteria:** Journalist can fully populate bio, career, education, and awards from the admin.
 

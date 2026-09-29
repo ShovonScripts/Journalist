@@ -1,6 +1,9 @@
-﻿# FRONTEND.md
+# FRONTEND.md
 
 ## 1. Route Map
+
+Admin routes are not part of this map. The panel lives entirely under `/admin`
+and is specified in `ADMIN_PANEL.md` §3.
 
 ```
 /                     Homepage

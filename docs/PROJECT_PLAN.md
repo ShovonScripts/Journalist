@@ -1,4 +1,4 @@
-﻿# PROJECT_PLAN.md
+# PROJECT_PLAN.md
 
 ## 1. Project Overview
 
@@ -40,7 +40,7 @@ It exists to consolidate the journalist's professional identity, career history,
 - Full-text/metadata search across the whole archive.
 - Awards & recognitions, professional publications (books/reports/papers if any).
 - Contact page with a message form.
-- Admin CMS for independent content management (Laravel + Filament, planned).
+- Admin CMS for independent content management — a custom, first-party Laravel panel, no admin framework package (see `ADMIN_PANEL.md`).
 - SEO architecture designed to avoid duplicate-content issues with syndicated/external work.
 
 ## 6. Content Types
@@ -68,7 +68,7 @@ See `FRONTEND.md` for the full route map and page-level detail. High level:
 
 ## 8. Admin Functionality
 
-A Filament-based admin panel (see `ADMIN_PANEL.md`) covering content CRUD across all content types, profile/career/education/award management, media library, publication registry, SEO fields per entry, contact message inbox, and site settings. No mandatory review/approval step in V1; status field (draft/scheduled/published) is journalist-controlled.
+A custom, first-party admin panel (see `ADMIN_PANEL.md`) covering content CRUD across all content types, profile/career/education/award management, media library, publication registry, SEO fields per entry, contact message inbox, and site settings. Implemented as Blade views + controllers + form requests on stock Laravel — no admin framework package. No mandatory review/approval step in V1; status field (draft/scheduled/published) is journalist-controlled.
 
 ## 9. Publishing Approach
 
@@ -94,7 +94,7 @@ A Filament-based admin panel (see `ADMIN_PANEL.md`) covering content CRUD across
 ## 12. Technology Assumptions
 
 - Backend: Laravel (PHP).
-- Admin panel: Filament.
+- Admin panel: custom first-party Laravel — Blade + Tailwind + Alpine, no admin framework package (rationale in `ADMIN_PANEL.md` §1).
 - Database: MySQL/PostgreSQL (relational; exact choice deferred to implementation phase).
 - Frontend: Blade + Tailwind (+ Alpine.js for light interactivity), server-rendered for SEO strength.
 - Search: DB-driven full-text search for V1; upgrade path to Meilisearch/Algolia noted as future option.

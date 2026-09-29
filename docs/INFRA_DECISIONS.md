@@ -3,7 +3,7 @@
 ## Context
 
 - Solo developer operation based in Bangladesh.
-- Personal/professional journalist portfolio site (Laravel 12 + Filament 5 + MySQL).
+- Personal/professional journalist portfolio site (Laravel 12 + MySQL, custom first-party admin panel — no admin framework package).
 - Low-to-moderate traffic, media-heavy (uploaded images via `storage:link`).
 - Budget-conscious but willing to pay for reliability and low latency to South Asia.
 - All three decisions below are independent; choices do not block each other.
@@ -21,7 +21,7 @@
 
 ### Option B — Railway
 - **Rough monthly cost:** ~USD 5–20 (Hobby plan) for PHP + MySQL services; scales with usage.
-- **Deploy complexity:** Low-medium. Git-based deploy, but the deploy sequence must be encoded in `railway.json` or a start command (`sh -c 'php artisan migrate --force && php artisan config:cache && php artisan serve --host 0.0.0.0 --port $PORT'`). Filament works fine.
+- **Deploy complexity:** Low-medium. Git-based deploy, but the deploy sequence must be encoded in `railway.json` or a start command (`sh -c 'php artisan migrate --force && php artisan config:cache && php artisan serve --host 0.0.0.0 --port $PORT'`). The custom admin panel adds no package-specific boot steps.
 - **Media/`storage:link` support:** Partial. Railway disks are ephemeral by default; you must attach a persistent volume (~USD 1/GB-month) and symlink to it.
 - **Bangladesh/South Asia latency:** Railway’s nearest region is typically Singapore or Japan (~100–150 ms).
 - **Payment methods:** International card only.
@@ -34,7 +34,7 @@
 - **Payment methods:** Local payment methods (bKash, Nagad, Rocket) often accepted by BD hosts; international hosts use cards.
 
 ### Recommendation: Option A (Forge + DigitalOcean)
-Forge is purpose-built for Laravel, the deploy command sequence in `docs/DEPLOYMENT.md` maps 1:1, and Filament’s `storage:link` works without storage-driver changes. If latency to South Asia becomes a hard requirement, swap the DO droplet for an AWS Lightsail instance in the Singapore region without changing any app code.
+Forge is purpose-built for Laravel, the deploy command sequence in `docs/DEPLOYMENT.md` maps 1:1, and media uploads use the standard `storage:link` layout, so no storage-driver changes are needed. If latency to South Asia becomes a hard requirement, swap the DO droplet for an AWS Lightsail instance in the Singapore region without changing any app code.
 
 **What changes in `.env` / `docs/DEPLOYMENT.md`:**
 - Set `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://your-domain.com`.

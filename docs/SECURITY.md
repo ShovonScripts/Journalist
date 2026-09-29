@@ -2,7 +2,10 @@
 
 ## 1. Authentication
 
-Filament's shipped auth pipeline, driven from `App\Filament\Pages\Auth\Login`.
+A first-party controller, `App\Http\Controllers\Admin\Auth\LoginController`, over
+Laravel's own auth stack. No admin package sits between the form and the
+session (see `ADMIN_PANEL.md` §1 for that decision and §14 for the panel's
+auth/authorization surface).
 
 **Sign-in is a single passcode with no identity field.** There is one person who
 needs this panel, so the form asks for one secret rather than an email *and* a
@@ -19,13 +22,19 @@ What this does **not** change:
   never read from the request, so a submitted `email` cannot redirect the login
   at a different account. The passcode deliberately resolves to the *owner* and
   not "the first user", so it can never escalate into a lesser role.
-- Filament's whole upstream `authenticate()` still runs: `Timebox`
-  constant-duration padding (a wrong passcode takes as long to reject as a
-  right one, so it cannot be timed), `canAccessPanel()` role checks, the
-  attempting/failed auth events, and the multi-factor challenge if ever enabled.
-  `Login::getCredentialsFromFormData()` is the only seam overridden — it maps
-  the one submitted field back onto the `{email, password}` pair the base class
-  expects.
+- The guarantees a panel package used to supply are now explicit in one file
+  instead of inherited from a framework:
+  - **Constant-duration rejection** (`PasscodeGuard::attempt()`). A bcrypt
+    comparison always runs — against a decoy hash when no owner row exists — and
+    the response is held to a fixed time floor, so a wrong passcode takes as
+    long to reject as a right one and a missing account cannot be distinguished
+    from a wrong secret by timing.
+  - **Role enforcement on the same request, not just in the UI.**
+    `EnsureUserHasRole` guards the entire authenticated group, so a session
+    belonging to a future non-owner account reaches nothing.
+  - **Laravel's own auth events are fired** (`Illuminate\Auth\Events\Login` /
+    `Failed`), so listeners — throttling, a new-device alert, or a second factor
+    added later — attach without the form being redesigned.
 - The passcode is changeable at `/admin/profile`, which additionally requires
   the **current** passcode before saving a new one.
 
@@ -45,20 +54,21 @@ site, but it is a real constraint rather than a neutral simplification:
   (§9) is the only thing standing between a weak passcode and an online
   guessing attack, so do not weaken it.
 - Two-factor authentication is the recommended next step for this account,
-  given the reputational stakes of a journalist's panel being compromised. It is
-  supported by the Filament pipeline already in place and was deliberately not
-  removed when the form was simplified.
+  given the reputational stakes of a journalist's panel being compromised. Note
+  that it is **not** provided by anything currently installed: adding it means a
+  second step in `LoginController` plus a TOTP secret on `users` — a deliberate
+  deferral, not a config flag waiting to be switched on.
 
 ## 2. Authorization
 
-Filament policies gate all admin resources to authenticated users with `role = owner` (and, later, `editor` with narrower permissions). No public registration route for admin accounts — accounts created manually/by seeding only.
+Route middleware (`EnsureUserHasRole`) plus one policy per model gate every admin route to authenticated users with `role = owner` (and, later, `editor` with narrower permissions). Policies are registered in `AppServiceProvider` and called explicitly from controllers for destructive and bulk actions, so authorization never depends on an action being reachable only through the UI. No public registration route for admin accounts — accounts are created by seeder or the `admin:passcode` command only.
 
 ## 3. Passcode Security
 
 - Bcrypt hashing (Laravel default). The passcode is a password in every respect
   except its label.
 - Minimum length/complexity enforced when the passcode is changed
-  (Filament's `Password::default()` rule is still applied).
+  (Laravel's `Password::default()` rule is applied).
 - Rate-limited sign-in attempts, throttled per IP with escalating backoff
   (§9). The throttle key is `sha1(component|method|IP)` and never included the
   email field, so simplifying the form did not widen the window.

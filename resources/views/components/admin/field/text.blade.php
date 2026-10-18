@@ -1,4 +1,6 @@
-@props(['name', 'label' => null, 'hint' => null, 'value' => null, 'type' => 'text', 'required' => false])
+@props(['name', 'label' => null, 'hint' => null, 'value' => null, 'type' => 'text', 'required' => false, 'old' => null])
+
+@php($key = $old ?? $name)
 
 <label class="block">
     @if ($label)
@@ -10,7 +12,7 @@
     <input
         type="{{ $type }}"
         name="{{ $name }}"
-        value="{{ old($name, $value) }}"
+        value="{{ old($key, $value) }}"
         @if ($required) required @endif
         {{ $attributes->merge(['class' => 'block w-full rounded border border-hairline bg-white px-3 py-2 text-sm outline-none focus:border-accent focus:ring-1 focus:ring-accent']) }}
     >
@@ -19,7 +21,7 @@
         <span class="mt-1 block text-[12px] text-muted">{{ $hint }}</span>
     @endif
 
-    @error($name)
+    @error($key)
         <p class="mt-1 text-[12px] text-accent">{{ $message }}</p>
     @enderror
 </label>

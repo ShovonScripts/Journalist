@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Award;
+use App\Models\CareerHistory;
 use App\Models\Category;
 use App\Models\ContentItem;
+use App\Models\Education;
+use App\Models\JournalistProfile;
 use App\Models\Media;
 use App\Models\Publication;
 use App\Models\Tag;
@@ -34,6 +38,11 @@ class ScreenRenderTest extends TestCase
             'author_id' => $owner->id,
         ]);
 
+        $profile = JournalistProfile::factory()->create(['user_id' => $owner->id]);
+        $career = CareerHistory::factory()->create(['journalist_profile_id' => $profile->id]);
+        $education = Education::factory()->create(['journalist_profile_id' => $profile->id]);
+        $award = Award::factory()->create(['journalist_profile_id' => $profile->id]);
+
         $urls = [
             route('admin.dashboard'),
             route('admin.content.index'),
@@ -53,6 +62,17 @@ class ScreenRenderTest extends TestCase
             route('admin.publications.edit', $publication),
             route('admin.media.index'),
             route('admin.media.edit', $media),
+            route('admin.journalist-profile.edit', $profile),
+            route('admin.career-history.index'),
+            route('admin.career-history.create'),
+            route('admin.career-history.edit', $career),
+            route('admin.education.index'),
+            route('admin.education.create'),
+            route('admin.education.edit', $education),
+            route('admin.awards.index'),
+            route('admin.awards.create'),
+            route('admin.awards.edit', $award),
+            route('admin.profile.edit'),
         ];
 
         foreach ($urls as $url) {

@@ -1,4 +1,4 @@
-@props(['columns' => [], 'sort' => null, 'direction' => 'asc'])
+@props(['columns' => [], 'sort' => null, 'direction' => 'asc', 'reorder' => null])
 
 <div {{ $attributes->merge(['class' => 'overflow-x-auto rounded border border-hairline bg-white']) }}>
     <table class="min-w-full text-[13px]">
@@ -24,7 +24,7 @@
                 @endforeach
             </tr>
         </thead>
-        <tbody class="divide-y divide-hairline">
+        <tbody class="divide-y divide-hairline" @if ($reorder) data-reorder="{{ $reorder }}" @endif>
             {{ $slot }}
         </tbody>
     </table>

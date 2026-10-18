@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import { initReorder } from './modules/reorder';
 
 Alpine.data('mediaPicker', (config) => ({
     endpoint: config.endpoint,
@@ -9,6 +10,7 @@ Alpine.data('mediaPicker', (config) => ({
     open: false,
     term: '',
     items: [],
+    uploadError: false,
 
     async load() {
         const response = await fetch(`${this.endpoint}?q=${encodeURIComponent(this.term)}`, {
@@ -80,3 +82,9 @@ Alpine.data('contentForm', (state) => ({
 window.Alpine = Alpine;
 
 Alpine.start();
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReorder);
+} else {
+    initReorder();
+}

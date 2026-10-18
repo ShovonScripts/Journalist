@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Publication extends Model
@@ -17,7 +18,13 @@ class Publication extends Model
         'logo_media_id',
         'website_url',
         'description',
+        'sort_order',
     ];
+
+    public function journalistProfiles(): BelongsToMany
+    {
+        return $this->belongsToMany(JournalistProfile::class, 'journalist_profile_publication');
+    }
 
     public function logo(): BelongsTo
     {

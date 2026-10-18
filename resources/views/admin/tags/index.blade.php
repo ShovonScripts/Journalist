@@ -18,14 +18,19 @@
             action-label="New tag"
         />
     @else
-        <x-admin.data-table :columns="[
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'slug', 'label' => 'Slug'],
-            ['key' => 'content', 'label' => 'Content'],
-            ['key' => 'actions', 'label' => ''],
-        ]">
+        <x-admin.data-table
+            :reorder="route('admin.tags.reorder')"
+            :columns="[
+                ['key' => 'move', 'label' => ''],
+                ['key' => 'name', 'label' => 'Name'],
+                ['key' => 'slug', 'label' => 'Slug'],
+                ['key' => 'content', 'label' => 'Content'],
+                ['key' => 'actions', 'label' => ''],
+            ]"
+        >
             @foreach ($tags as $tag)
-                <tr class="hover:bg-ink/[0.02]">
+                <tr class="hover:bg-ink/[0.02]" data-reorder-item data-id="{{ $tag->id }}">
+                    <td class="w-8 px-2 py-3"><x-admin.reorder-handle /></td>
                     <td class="px-4 py-3">
                         <a href="{{ route('admin.tags.edit', $tag) }}" class="font-medium hover:text-accent">{{ $tag->name }}</a>
                     </td>

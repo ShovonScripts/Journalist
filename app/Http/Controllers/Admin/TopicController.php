@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\ReordersRecords;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ReorderRequest;
 use App\Http\Requests\Admin\StoreTopicRequest;
 use App\Http\Requests\Admin\UpdateTopicRequest;
 use App\Models\Topic;
 use App\Support\Slug;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class TopicController extends Controller
 {
+    use ReordersRecords;
+
     public function index(): View
     {
         return view('admin.topics.index', [
@@ -59,6 +64,13 @@ class TopicController extends Controller
         $topic->delete();
 
         return redirect()->route('admin.topics.index')->with('status', 'Topic deleted.');
+    }
+
+    public function reorder(ReorderRequest $request): JsonResponse
+    {
+        $this->applyOrder(Topic::class, $request->validated('ids'));
+
+        return $this->reordered();
     }
 
     /**

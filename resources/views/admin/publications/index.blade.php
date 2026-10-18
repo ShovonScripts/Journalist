@@ -18,14 +18,19 @@
             action-label="New publication"
         />
     @else
-        <x-admin.data-table :columns="[
-            ['key' => 'name', 'label' => 'Outlet'],
-            ['key' => 'slug', 'label' => 'Slug'],
-            ['key' => 'content', 'label' => 'Content'],
-            ['key' => 'actions', 'label' => ''],
-        ]">
+        <x-admin.data-table
+            :reorder="route('admin.publications.reorder')"
+            :columns="[
+                ['key' => 'move', 'label' => ''],
+                ['key' => 'name', 'label' => 'Outlet'],
+                ['key' => 'slug', 'label' => 'Slug'],
+                ['key' => 'content', 'label' => 'Content'],
+                ['key' => 'actions', 'label' => ''],
+            ]"
+        >
             @foreach ($publications as $publication)
-                <tr class="hover:bg-ink/[0.02]">
+                <tr class="hover:bg-ink/[0.02]" data-reorder-item data-id="{{ $publication->id }}">
+                    <td class="w-8 px-2 py-3"><x-admin.reorder-handle /></td>
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-3">
                             @if ($publication->logo)

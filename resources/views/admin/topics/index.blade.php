@@ -18,15 +18,20 @@
             action-label="New topic"
         />
     @else
-        <x-admin.data-table :columns="[
-            ['key' => 'name', 'label' => 'Topic'],
-            ['key' => 'slug', 'label' => 'Slug'],
-            ['key' => 'content', 'label' => 'Content'],
-            ['key' => 'order', 'label' => 'Order'],
-            ['key' => 'actions', 'label' => ''],
-        ]">
+        <x-admin.data-table
+            :reorder="route('admin.topics.reorder')"
+            :columns="[
+                ['key' => 'move', 'label' => ''],
+                ['key' => 'name', 'label' => 'Topic'],
+                ['key' => 'slug', 'label' => 'Slug'],
+                ['key' => 'content', 'label' => 'Content'],
+                ['key' => 'order', 'label' => 'Order'],
+                ['key' => 'actions', 'label' => ''],
+            ]"
+        >
             @foreach ($topics as $topic)
-                <tr class="hover:bg-ink/[0.02]">
+                <tr class="hover:bg-ink/[0.02]" data-reorder-item data-id="{{ $topic->id }}">
+                    <td class="w-8 px-2 py-3"><x-admin.reorder-handle /></td>
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-3">
                             @if ($topic->featuredImage)

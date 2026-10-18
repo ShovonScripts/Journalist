@@ -18,15 +18,20 @@
             action-label="New category"
         />
     @else
-        <x-admin.data-table :columns="[
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'slug', 'label' => 'Slug'],
-            ['key' => 'content', 'label' => 'Content'],
-            ['key' => 'order', 'label' => 'Order'],
-            ['key' => 'actions', 'label' => ''],
-        ]">
+        <x-admin.data-table
+            :reorder="route('admin.categories.reorder')"
+            :columns="[
+                ['key' => 'move', 'label' => ''],
+                ['key' => 'name', 'label' => 'Name'],
+                ['key' => 'slug', 'label' => 'Slug'],
+                ['key' => 'content', 'label' => 'Content'],
+                ['key' => 'order', 'label' => 'Order'],
+                ['key' => 'actions', 'label' => ''],
+            ]"
+        >
             @foreach ($categories as $category)
-                <tr class="hover:bg-ink/[0.02]">
+                <tr class="hover:bg-ink/[0.02]" data-reorder-item data-id="{{ $category->id }}">
+                    <td class="w-8 px-2 py-3"><x-admin.reorder-handle /></td>
                     <td class="px-4 py-3">
                         <a href="{{ route('admin.categories.edit', $category) }}" class="font-medium hover:text-accent">
                             {{ $category->name }}

@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\ReordersRecords;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ReorderRequest;
 use App\Http\Requests\Admin\StorePublicationRequest;
 use App\Http\Requests\Admin\UpdatePublicationRequest;
 use App\Models\Publication;
 use App\Support\Slug;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class PublicationController extends Controller
 {
+    use ReordersRecords;
+
     public function index(): View
     {
         return view('admin.publications.index', [
             'publications' => Publication::query()
                 ->with('logo')
                 ->withCount('contentItems')
+                ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get(),
         ]);
@@ -58,6 +64,13 @@ class PublicationController extends Controller
         $publication->delete();
 
         return redirect()->route('admin.publications.index')->with('status', 'Publication deleted.');
+    }
+
+    public function reorder(ReorderRequest $request): JsonResponse
+    {
+        $this->applyOrder(Publication::class, $request->validated('ids'));
+
+        return $this->reordered();
     }
 
     /**

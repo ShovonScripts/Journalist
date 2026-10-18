@@ -7,6 +7,7 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -68,5 +69,10 @@ class User extends Authenticatable
     public function contentItems(): HasMany
     {
         return $this->hasMany(ContentItem::class, 'author_id');
+    }
+
+    public function journalistProfile(): HasOne
+    {
+        return $this->hasOne(JournalistProfile::class);
     }
 }

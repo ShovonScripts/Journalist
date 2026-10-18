@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\JournalistProfile;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -84,7 +85,16 @@ class AdminNavigation
      */
     public static function isAvailable(array $item): bool
     {
-        return isset($item['route']) && Route::has($item['route']);
+        if (! isset($item['route']) || ! Route::has($item['route'])) {
+            return false;
+        }
+
+        // The singleton profile screen has no URL until the profile exists.
+        if ($item['route'] === 'admin.journalist-profile.edit') {
+            return JournalistProfile::current() !== null;
+        }
+
+        return true;
     }
 
     /**
@@ -108,6 +118,17 @@ class AdminNavigation
             return '#';
         }
 
-        return route($item['route'], $item['params'] ?? []);
+        return route($item['route'], $item['params'] ?? self::singletonParams($item['route']));
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private static function singletonParams(string $route): array
+    {
+        return match ($route) {
+            'admin.journalist-profile.edit' => ['journalistProfile' => (int) JournalistProfile::current()?->id],
+            default => [],
+        };
     }
 }

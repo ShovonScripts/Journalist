@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+
+/*
+ * Admin design tokens — the same palette and type faces as the public site
+ * (DESIGN_SYSTEM.md §2–§3), with admin-specific density: 13–14px UI text,
+ * 36–40px row heights, tables over card grids, no decorative imagery.
+ */
+@theme {
+    --color-ink: #1a1a1a;
+    --color-paper: #faf9f6;
+    --color-accent: #8c1d18;
+    --color-hairline: #e4e1d9;
+    --color-muted: #5b5b5b;
+
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+[x-cloak] {
+    display: none !important;
+}
